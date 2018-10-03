@@ -1,0 +1,14 @@
+ls   - list
+ls -al
+   ll  - shortcut for this
+pwd  - present work directory
+cd   - change directory
+cd ~  - go to home directory
+mkdir  - create directory
+mount  - see current drives and where they are mounted
+
+main menu -> gedit - text editor
+
+to install compiler
+  sudo apt-get update
+  sudo apt install build-essential
