@@ -1,0 +1,82 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <windows.h>
+#include "minhook/MinHook.h"
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+using namespace std;
+
+BOOL CALLBACK enumFunc(HWND hwnd, LPARAM lParam)
+{
+    DWORD thisId;
+    GetWindowThreadProcessId(hwnd, &thisId);
+    if (thisId == GetCurrentProcessId()) {
+        *(HWND*)lParam = hwnd;
+        return FALSE; // stop enumeration
+    }
+
+    // Continue enumerating
+    return TRUE;
+}
+
+HWND findTopWindow()
+{
+    HWND hwnd = 0;
+    EnumWindows(enumFunc, (LPARAM)&hwnd);
+    return hwnd;
+}
+
+
+LONG_PTR prev_ptr = 0;
+FILE* log = NULL;
+
+LRESULT CALLBACK myWindowProc(_In_ HWND   hwnd, _In_ UINT   uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) 
+{
+    if (uMsg == WM_CHAR) {
+        wParam = 'A';
+    }
+    fprintf(log, "%x -- %d %d\n", (int)uMsg, (int)wParam, (int)lParam);
+    fflush(log);
+    return CallWindowProcA((WNDPROC)prev_ptr, hwnd, uMsg, wParam, lParam);
+}
+
+
+
+
+void hijackMessages()
+{
+    //log = fopen("C:\\Projects\\lessons\\kygit\\test\\remote_dll\\log.txt", "w");
+
+    HWND hwnd = findTopWindow();
+    HWND hEditWnd = GetWindow(hwnd, GW_CHILD);
+
+    prev_ptr = GetWindowLongPtrA(hEditWnd, GWLP_WNDPROC);
+    SetWindowLongPtrA(hEditWnd, GWLP_WNDPROC, (LONG_PTR)myWindowProc);
+
+}
+
+
+
+BOOL APIENTRY DllMain( HMODULE hModule,
+                       DWORD  ul_reason_for_call,
+                       LPVOID lpReserved
+                     )
+{
+    switch (ul_reason_for_call)
+    {
+    case DLL_PROCESS_ATTACH:
+        hijackMessages();
+        //doHook();
+        //CreateThread(NULL, 0, annoyThread, 0, 0, NULL);
+        break;
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+    case DLL_PROCESS_DETACH:
+        break;
+    }
+    return TRUE;
+}
+
