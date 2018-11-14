@@ -11,6 +11,4 @@ int main(int argc, char *argv[]) {
 	int len = strlen(str);
 	WriteFile(h, str, len, &written, NULL);
 
-
-	return 0;
 }
