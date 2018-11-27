@@ -1,5 +1,6 @@
-#include <windows.h>
+ο»Ώ#include <windows.h>
 
+LONG_PTR previous = 0;
 
 LRESULT CALLBACK myWindowProc(_In_ HWND   hwnd, _In_ UINT   uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) {
 	if (uMsg == WM_CLOSE) {
@@ -9,7 +10,7 @@ LRESULT CALLBACK myWindowProc(_In_ HWND   hwnd, _In_ UINT   uMsg, _In_ WPARAM wP
 		exit(0);
 	}
 
-	return DefWindowProcA(hwnd, uMsg, wParam, lParam);
+	return CallWindowProcA((WNDPROC)previous ,hwnd, uMsg, wParam, lParam);
 }
 
 HWND theHwndLookingFor = 0;
@@ -29,11 +30,11 @@ void hijack_window() {
 	EnumWindows(myEnumWindowsProc, 0);
 
 	//LONG x = (LONG)myWindowProc;
-	LONG_PTR previous = GetWindowLongPtrA(theHwndLookingFor, GWLP_WNDPROC);
+	 previous = GetWindowLongPtrA(theHwndLookingFor, GWLP_WNDPROC);
 
 	// THIS DOESN'T WORK!
-	SetWindowLongPtrA(theHwndLookingFor, GWLP_WNDPROC, previous);
-	//SetWindowLongPtrA(theHwndLookingFor, GWLP_WNDPROC, (LONG_PTR)myWindowProc);
+	//SetWindowLongPtrA(theHwndLookingFor, GWLP_WNDPROC, previous);
+	SetWindowLongPtrA(theHwndLookingFor, GWLP_WNDPROC, (LONG_PTR)myWindowProc);
 
 
 }
@@ -46,8 +47,8 @@ BOOL WINAPI DllMain(
 {
 	if (fdwReason == DLL_PROCESS_ATTACH) {
 		hijack_window();
-		//MessageBoxW(NULL, L"ωμεν", "dll", MB_OK);
+		MessageBoxW(NULL, L"Χ©ΧΧ•Χ", "dll", MB_OK);
 	}
-
+	return TRUE;
 
 }
