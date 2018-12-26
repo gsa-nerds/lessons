@@ -1,0 +1,41 @@
+ll   - list files
+ll --help   - get help
+ll --full-time   - with full timestamp
+uname -a  - info about the machine
+whoami   - current user
+cat      - show text to console (type in cmd.exe)
+rm       - delete things
+gcc      - GNU Compiler Collection
+sudo apt-get install build-essential    - install gcc(compiler), ld(linker), as(assembler)
+file filename    - try to guess what is this file
+sudo bash   - create a new shell process with root user
+ps  - list of processes (started from my terminal)
+ps x   - list all processes in the system (x is an option not starting with -)
+ps aux - more info
+ps aux --forest  - show graphical tree of process
+ps aux | less  - move the output to a more convenient viewer
+xeyes  - demo of gui
+xeyes &  - start process in parallel to terminal - start and don't wait for it to end
+xeyes &> file.txt  - redirect the output to a file
+xeyes &> /dev/null   - redirect the output to garbage
+tar cf file.tar a b c   - gather files into one archive file
+tar xcf file.tar.gz a b c - save as above, and compress
+readlink symlink-file  -show what this symlink is pointing to
+/proc/PID/exe   - symlink to the executable of this process 
+echo bla-bla-`uname -r`   - backtic: run a command and concatenate its output as a string
+sudo apt-get install linux-headers-`uname -r`   - install headers package needed for compiling modules for my kernel
+
+
+DAC - Discresionary Access Control
+   rwxrwxrwx
+
+basic compilation
+  gcc hello.c -o hello  
+running
+  ./hello
+
+gcc hello.c
+./a.out   - default output name
+
+chmod a+x ./run.sh   - add execution permission to everybody
+
